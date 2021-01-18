@@ -202,6 +202,7 @@
             android:text="뽑기"
             android:textColor="#5C5C5C"
             android:textSize="30sp"
+            android:onClick="pick"
             app:backgroundTint="#6BC3FF"
             app:iconTint="#FFFFFF" />
 
@@ -224,6 +225,7 @@
                 android:text="초기화"
                 android:textColor="#5C5C5C"
                 android:textSize="25sp"
+                android:onClick="reset"
                 app:backgroundTint="#C5E9FF" />
 
             <Button
@@ -236,6 +238,7 @@
                 android:text="결과 복사"
                 android:textColor="#5C5C5C"
                 android:textSize="25sp"
+                android:onClick="copy"
                 app:backgroundTint="#C5E9FF" />
         </LinearLayout>
 
