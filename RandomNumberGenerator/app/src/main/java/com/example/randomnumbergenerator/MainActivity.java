@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
             //개수 값이 범위 크기보다 큰 경우
             if (Integer.parseInt(number.getText().toString()) >
-                    Integer.parseInt(endRange.getText().toString()) - Integer.parseInt(startRange.getText().toString()) )  {
+                    Integer.parseInt(endRange.getText().toString()) - Integer.parseInt(startRange.getText().toString()) + 1 )  {
                 Toast.makeText(this, "뽑을 개수가 범위보다 큽니다", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -106,6 +106,10 @@ public class MainActivity extends AppCompatActivity {
         if (hasStarted = true) { //이미 뽑기 진행 중인 경우
 
             //중복 허용을 하지 않았고, 이미 모든 수를 뽑은 경우
+            if ((allowOverlappingBool == false) && (accumulatedNum + Count > endRangeNum - startRangeNum + 1)) {
+                Toast.makeText(this, "더 이상 뽑을 수 없습니다", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
 
             accumulatedNum += Count;
