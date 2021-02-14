@@ -2,6 +2,8 @@ package com.example.randomnumbergenerator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -122,7 +124,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void copy(View v) {
-
+        ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("결과", resultView.getText().toString());
+        clipboardManager.setPrimaryClip(clipData);
+        Toast.makeText(getApplication(), "결과가 복사되었습니다.",Toast.LENGTH_SHORT).show();
     }
 
 }
