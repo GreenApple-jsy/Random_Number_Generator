@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     public int startRangeNum; //시작 범위
     public int endRangeNum; //끝 범위
     public int accumulatedNum; //누적 뽑은 수 개수
-    public int Count; //뽑을 수 개수
     public boolean allowOverlappingBool; // 중복 허용 여부
     public boolean hasStarted; //현재 뽑기 진행중인 경우 true
 
@@ -34,9 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         startRange = findViewById(R.id.startRange_editTextNumber);
         endRange = findViewById(R.id.endRange_editTextNumber);
-        number = findViewById(R.id.number_editTextNumber);
         allowOverlapping = findViewById(R.id.allowOverlapping_checkBox);
-        result = findViewById(R.id.result_textView);
+        result = findViewById(R.id.pickedNumber_TextView);
         resultView = findViewById(R.id.resultView_TextView);
 
         //초기화 구문
@@ -50,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         allowOverlapping.setChecked(false);
 
         accumulatedNum = 0;
-        Count = 0;
         hasStarted = false;
     }
 
@@ -95,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
             startRangeNum = Integer.parseInt(startRange.getText().toString());
             endRangeNum = Integer.parseInt(endRange.getText().toString());
             accumulatedNum = 0;
-            Count = Integer.parseInt(number.getText().toString());
             allowOverlappingBool = allowOverlapping.isChecked();
 
             startRange.setActivated(false);
@@ -108,19 +104,30 @@ public class MainActivity extends AppCompatActivity {
         if (hasStarted = true) { //이미 뽑기 진행 중인 경우
 
             //중복 허용을 하지 않았고, 이미 모든 수를 뽑은 경우
-            if ((allowOverlappingBool == false) && (accumulatedNum + Count > endRangeNum - startRangeNum + 1)) {
+            if ((allowOverlappingBool == false) && (accumulatedNum >= endRangeNum - startRangeNum + 1)) {
                 Toast.makeText(this, "더 이상 뽑을 수 없습니다", Toast.LENGTH_SHORT).show();
                 return;
             }
 
 
-            accumulatedNum += Count;
+            accumulatedNum++;
         }
 
     }
 
     public void reset(View v) {
+        //초기화 구문
+        startRange.setActivated(true);
+        endRange.setActivated(true);
+        number.setActivated(true);
+        allowOverlapping.setActivated(true);
 
+        result.setText("");
+        resultView.setText("");
+        allowOverlapping.setChecked(false);
+
+        accumulatedNum = 0;
+        hasStarted = false;
     }
 
     public void copy(View v) {
