@@ -11,6 +11,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
 
     public EditText startRange;
@@ -25,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public int accumulatedNum; //누적 뽑은 수 개수
     public boolean allowOverlappingBool; // 중복 허용 여부
     public boolean hasStarted; //현재 뽑기 진행중인 경우 true
+    public List<Integer> RandomNumberList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,16 +106,45 @@ public class MainActivity extends AppCompatActivity {
             allowOverlapping.setActivated(false);
 
             hasStarted = true;
-        }
-        if (hasStarted = true) { //이미 뽑기 진행 중인 경우
 
-            //중복 허용을 하지 않았고, 이미 모든 수를 뽑은 경우
-            if ((allowOverlappingBool == false) && (accumulatedNum >= endRangeNum - startRangeNum + 1)) {
-                Toast.makeText(this, "더 이상 뽑을 수 없습니다", Toast.LENGTH_SHORT).show();
-                return;
+            //중복 허용을 하지 않았다면,
+            //Shuffle을 이용하여 수들을 미리 랜덤하게 섞어서 정렬함
+            if (allowOverlappingBool == false) {
+                RandomNumberList = new ArrayList<Integer>();
+                for(int i = startRangeNum ; i <= endRangeNum ; i++) {
+                    RandomNumberList.add(i);
+                }
+                Collections.shuffle(RandomNumberList);
             }
 
+        }
 
+        if (hasStarted = true) { //이미 뽑기 진행 중인 경우
+
+            //중복 허용한 경우
+            if (allowOverlappingBool == true) {
+                Random rand = new Random();
+                int randomNum = rand.nextInt(endRangeNum - startRangeNum + 1) + startRangeNum;
+                result.setText(randomNum);
+                if (accumulatedNum == 0)
+                    resultView.setText(resultView.getText().toString() + randomNum);
+                else
+                    resultView.setText(resultView.getText().toString() + ", " + randomNum);
+            }
+            //중복 허용하지 않은 경우
+            else if (allowOverlappingBool == false) {
+                //이미 모든 수를 뽑은 경우
+                if (accumulatedNum >= endRangeNum - startRangeNum + 1) {
+                    Toast.makeText(this, "더 이상 뽑을 수 없습니다", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int randomNum = RandomNumberList.get(accumulatedNum);
+                result.setText(randomNum);
+                if (accumulatedNum == 0)
+                    resultView.setText(resultView.getText().toString() + randomNum);
+                else
+                    resultView.setText(resultView.getText().toString() + ", " + randomNum);
+            }
             accumulatedNum++;
         }
 
