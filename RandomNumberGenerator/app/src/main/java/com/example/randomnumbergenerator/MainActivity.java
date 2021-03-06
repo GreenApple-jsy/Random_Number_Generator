@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
 
     public EditText startRange;
     public EditText endRange;
-    public EditText number;
     public CheckBox allowOverlapping;
     public TextView result;
     public TextView resultView;
@@ -43,11 +42,7 @@ public class MainActivity extends AppCompatActivity {
         result = findViewById(R.id.pickedNumber_TextView);
         resultView = findViewById(R.id.resultView_TextView);
 
-        //초기화 구문
-        startRange.setActivated(true);
-        endRange.setActivated(true);
-        number.setActivated(true);
-        allowOverlapping.setActivated(true);
+        ActivateEditField();
 
         result.setText("");
         resultView.setText("");
@@ -75,35 +70,13 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            //뽑을 개수를 입력 안 한 경우
-            if (number.getText().length() <= 0)  {
-                Toast.makeText(this, "뽑을 개수를 입력하세요", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            //올바른 개수 값을 입력하지 않은 경우
-            if ((Integer.parseInt(number.getText().toString()) < 0) || (Integer.parseInt(number.getText().toString()) > 1000))  {
-                Toast.makeText(this, "1 이상 100 이하의 뽑을 개수를 입력하세요", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            //개수 값이 범위 크기보다 큰 경우
-            if (Integer.parseInt(number.getText().toString()) >
-                    Integer.parseInt(endRange.getText().toString()) - Integer.parseInt(startRange.getText().toString()) + 1 )  {
-                Toast.makeText(this, "뽑을 개수가 범위보다 큽니다", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
             //값이 유효한 경우 값 저장, 텍스트필드 비활성화 후 뽑기 진행 시작 처리(hasStarted 값을 true로)
             startRangeNum = Integer.parseInt(startRange.getText().toString());
             endRangeNum = Integer.parseInt(endRange.getText().toString());
             accumulatedNum = 0;
             allowOverlappingBool = allowOverlapping.isChecked();
 
-            startRange.setActivated(false);
-            endRange.setActivated(false);
-            number.setActivated(false);
-            allowOverlapping.setActivated(false);
+            DeactivateEditField();
 
             hasStarted = true;
 
@@ -139,30 +112,27 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 int randomNum = RandomNumberList.get(accumulatedNum);
-                result.setText(randomNum);
+                result.setText(Integer.toString(randomNum));
                 if (accumulatedNum == 0)
-                    resultView.setText(resultView.getText().toString() + randomNum);
+                    resultView.setText(resultView.getText().toString() + Integer.toString(randomNum));
                 else
-                    resultView.setText(resultView.getText().toString() + ", " + randomNum);
+                    resultView.setText(resultView.getText().toString() + ", " + Integer.toString(randomNum));
             }
             accumulatedNum++;
         }
-
     }
 
     public void reset(View v) {
-        //초기화 구문
-        startRange.setActivated(true);
-        endRange.setActivated(true);
-        number.setActivated(true);
-        allowOverlapping.setActivated(true);
-
+        startRange.setText("");
+        endRange.setText("");
         result.setText("");
         resultView.setText("");
         allowOverlapping.setChecked(false);
 
         accumulatedNum = 0;
         hasStarted = false;
+
+        ActivateEditField();
     }
 
     public void copy(View v) {
@@ -170,6 +140,34 @@ public class MainActivity extends AppCompatActivity {
         ClipData clipData = ClipData.newPlainText("결과", resultView.getText().toString());
         clipboardManager.setPrimaryClip(clipData);
         Toast.makeText(this, "결과가 복사되었습니다.",Toast.LENGTH_SHORT).show();
+    }
+
+    private void ActivateEditField() {
+        startRange.setClickable(true);
+        startRange.setFocusable(true);
+        startRange.setFocusableInTouchMode(true);
+
+        endRange.setClickable(true);
+        endRange.setFocusable(true);
+        endRange.setFocusableInTouchMode(true);
+
+        allowOverlapping.setClickable(true);
+        allowOverlapping.setFocusable(true);
+        allowOverlapping.setFocusableInTouchMode(true);
+    }
+
+    private void DeactivateEditField() {
+        startRange.setClickable(false);
+        startRange.setFocusable(false);
+        startRange.setFocusableInTouchMode(false);
+
+        endRange.setClickable(false);
+        endRange.setFocusable(false);
+        endRange.setFocusableInTouchMode(false);
+
+        allowOverlapping.setClickable(false);
+        allowOverlapping.setFocusable(false);
+        allowOverlapping.setFocusableInTouchMode(false);
     }
 
 }
