@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public CheckBox allowOverlapping;
     public TextView result;
     public TextView resultView;
+    public ScrollView scrollView;
 
     public int startRangeNum; //시작 범위
     public int endRangeNum; //끝 범위
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         allowOverlapping = findViewById(R.id.allowOverlapping_checkBox);
         result = findViewById(R.id.pickedNumber_TextView);
         resultView = findViewById(R.id.resultView_TextView);
+        scrollView = findViewById(R.id.scrollView);
 
         ActivateEditField();
 
@@ -169,5 +172,4 @@ public class MainActivity extends AppCompatActivity {
         allowOverlapping.setFocusable(false);
         allowOverlapping.setFocusableInTouchMode(false);
     }
-
 }
