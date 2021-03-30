@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean hasStarted; //현재 뽑기 진행중인 경우 true
     public List<Integer> RandomNumberList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +54,15 @@ public class MainActivity extends AppCompatActivity {
 
         accumulatedNum = 0;
         hasStarted = false;
+
+
+        //숫자 목록 스크롤뷰 자동 스크롤
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
     }
 
     public void pick(View v) {
@@ -172,4 +182,5 @@ public class MainActivity extends AppCompatActivity {
         allowOverlapping.setFocusable(false);
         allowOverlapping.setFocusableInTouchMode(false);
     }
+    
 }
