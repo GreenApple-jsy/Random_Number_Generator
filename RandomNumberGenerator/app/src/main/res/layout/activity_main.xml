@@ -37,70 +37,81 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/startRange_editTextNumber"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/RangeLinearLayout"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:width="100dp"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center"
-                android:hint="0 이상"
-                android:inputType="numberSigned"
-                android:textSize="17sp" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/fromTo_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:width="20dp"
-                android:fontFamily="sans-serif-black"
-                android:gravity="center"
-                android:text="~"
-                android:textColor="#5C5C5C"
-                android:textSize="25sp" />
+                <EditText
+                    android:id="@+id/startRange_editTextNumber"
+                    android:imeOptions="actionDone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:width="100dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:hint="0 이상"
+                    android:inputType="numberSigned"
+                    android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/endRange_editTextNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:width="100dp"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center"
-                android:hint="1000 이하"
-                android:inputType="numberSigned"
-                android:textSize="17sp" />
+                <TextView
+                    android:id="@+id/fromTo_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:width="20dp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="~"
+                    android:textColor="#5C5C5C"
+                    android:textSize="25sp" />
 
-            <CheckBox
-                android:id="@+id/allowOverlapping_checkBox"
-                android:layout_width="77dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:width="140dp"
-                android:checked="true"
-                android:clickable="false"
-                android:fontFamily="sans-serif-black"
-                android:gravity="start|right|center_vertical"
-                android:text="중복"
-                android:textColor="#535353"
-                android:textSize="17sp"
-                app:buttonTint="#72CEFF" />
+                <EditText
+                    android:id="@+id/endRange_editTextNumber"
+                    android:imeOptions="actionDone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:width="100dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:hint="10000 이하"
+                    android:inputType="numberSigned"
+                    android:textSize="16sp" />
+
+                <CheckBox
+                    android:id="@+id/allowOverlapping_checkBox"
+                    android:layout_width="77dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:width="140dp"
+                    android:checked="true"
+                    android:clickable="false"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="start|right|center_vertical"
+                    android:text="중복"
+                    android:textColor="#535353"
+                    android:textSize="17sp"
+                    app:buttonTint="#72CEFF" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <TextView
             android:id="@+id/pickedNumber_TextView"
             android:layout_width="match_parent"
-            android:layout_height="222dp"
+            android:layout_height="200dp"
             android:enabled="false"
             android:fontFamily="@font/spinnaker"
-            android:gravity="center_horizontal"
-            android:text="15"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="00"
+            android:textAllCaps="false"
             android:textColor="#2C8BFF"
             android:textSize="200sp"
             android:textStyle="bold"
@@ -201,6 +212,16 @@
                 android:onClick="copy"
                 app:backgroundTint="#C5E9FF" />
         </LinearLayout>
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="426dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            app:adSize="BANNER"
+            app:adUnitId="애드몹 배너 광고 아이디">
+        </com.google.android.gms.ads.AdView>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
