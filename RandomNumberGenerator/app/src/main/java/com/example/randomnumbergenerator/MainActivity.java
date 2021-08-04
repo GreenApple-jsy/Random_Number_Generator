@@ -4,13 +4,27 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,9 +36,11 @@ public class MainActivity extends AppCompatActivity {
     public EditText startRange;
     public EditText endRange;
     public CheckBox allowOverlapping;
+    public LinearLayout RangeLinearLayout;
     public TextView result;
     public TextView resultView;
     public ScrollView scrollView;
+    public AdView adView;
 
     public int startRangeNum; //시작 범위
     public int endRangeNum; //끝 범위
@@ -39,9 +55,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //광고 SDK 초기화
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        adView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+
         startRange = findViewById(R.id.startRange_editTextNumber);
         endRange = findViewById(R.id.endRange_editTextNumber);
         allowOverlapping = findViewById(R.id.allowOverlapping_checkBox);
+        RangeLinearLayout = findViewById(R.id.RangeLinearLayout);
         result = findViewById(R.id.pickedNumber_TextView);
         resultView = findViewById(R.id.resultView_TextView);
         scrollView = findViewById(R.id.scrollView);
@@ -54,15 +82,24 @@ public class MainActivity extends AppCompatActivity {
 
         accumulatedNum = 0;
         hasStarted = false;
+    }
 
-
-        //숫자 목록 스크롤뷰 자동 스크롤
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+    //EditText가 아닌 영역을 터치 시 키보드 숨기기
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View focusView = getCurrentFocus();
+        if (focusView != null) {
+            Rect rect = new Rect();
+            focusView.getGlobalVisibleRect(rect);
+            int x = (int) ev.getX(), y = (int) ev.getY();
+            if (!rect.contains(x, y)) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null)
+                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                focusView.clearFocus();
             }
-        });
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     public void pick(View v) {
@@ -77,9 +114,9 @@ public class MainActivity extends AppCompatActivity {
 
             //올바른 범위 값을 입력하지 않은 경우
             if ((Integer.parseInt(startRange.getText().toString()) < 0)
-                    || (Integer.parseInt(endRange.getText().toString()) > 1000)
+                    || (Integer.parseInt(endRange.getText().toString()) > 10000)
                     || (Integer.parseInt(startRange.getText().toString()) >= Integer.parseInt(endRange.getText().toString())))  {
-                Toast.makeText(this, "0 이상 1000 이하의 범위 값을 입력하세요", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "0 이상 10000 이하의 범위 값을 입력하세요", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -88,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             endRangeNum = Integer.parseInt(endRange.getText().toString());
             accumulatedNum = 0;
             allowOverlappingBool = allowOverlapping.isChecked();
+            setNumTextSize(endRangeNum);
 
             DeactivateEditField();
 
@@ -111,11 +149,12 @@ public class MainActivity extends AppCompatActivity {
             if (allowOverlappingBool == true) {
                 Random rand = new Random();
                 int randomNum = rand.nextInt(endRangeNum - startRangeNum + 1) + startRangeNum;
-                result.setText(randomNum);
+                result.setText(Integer.toString(randomNum));
+
                 if (accumulatedNum == 0)
-                    resultView.setText(resultView.getText().toString() + randomNum);
+                    resultView.setText(resultView.getText().toString() +  Integer.toString(randomNum));
                 else
-                    resultView.setText(resultView.getText().toString() + ", " + randomNum);
+                    resultView.setText(resultView.getText().toString() + ", " + Integer.toString(randomNum));
             }
             //중복 허용하지 않은 경우
             else if (allowOverlappingBool == false) {
@@ -126,13 +165,29 @@ public class MainActivity extends AppCompatActivity {
                 }
                 int randomNum = RandomNumberList.get(accumulatedNum);
                 result.setText(Integer.toString(randomNum));
+
                 if (accumulatedNum == 0)
                     resultView.setText(resultView.getText().toString() + Integer.toString(randomNum));
                 else
                     resultView.setText(resultView.getText().toString() + ", " + Integer.toString(randomNum));
             }
             accumulatedNum++;
+
+            //숫자 목록 스크롤뷰 아래쪽으로 자동 스크롤
+            scrollView.fullScroll(ScrollView.FOCUS_DOWN);
         }
+    }
+
+    //뽑힌 수의 자릿수에 따라 결과 텍스트 크기 변경
+    public void setNumTextSize(int Num) {
+        if (Num <= 99)
+            result.setTextSize(200);
+        else if (Num <= 999)
+            result.setTextSize(175);
+        else if (Num <= 9999)
+            result.setTextSize(125);
+        else if (Num == 10000)
+            result.setTextSize(110);
     }
 
     public void reset(View v) {
@@ -156,6 +211,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ActivateEditField() {
+        RangeLinearLayout.setBackgroundColor(Color.WHITE);
+
         startRange.setClickable(true);
         startRange.setFocusable(true);
         startRange.setFocusableInTouchMode(true);
@@ -170,6 +227,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void DeactivateEditField() {
+        RangeLinearLayout.setBackgroundColor(Color.LTGRAY);
+
         startRange.setClickable(false);
         startRange.setFocusable(false);
         startRange.setFocusableInTouchMode(false);
@@ -182,5 +241,5 @@ public class MainActivity extends AppCompatActivity {
         allowOverlapping.setFocusable(false);
         allowOverlapping.setFocusableInTouchMode(false);
     }
-    
+
 }
