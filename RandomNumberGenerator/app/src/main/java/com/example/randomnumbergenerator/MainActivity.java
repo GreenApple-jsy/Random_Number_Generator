@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -109,14 +110,18 @@ public class MainActivity extends AppCompatActivity {
             //시작 범위, 끝 범위를 입력 안 한 경우
             if ((startRange.getText().length() <= 0) || (endRange.getText().length() <= 0))  {
                 Toast.makeText(this, "범위 값을 입력하세요", Toast.LENGTH_SHORT).show();
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.vibrate(200); // 0.2초 진동
                 return;
             }
 
             //올바른 범위 값을 입력하지 않은 경우
             if ((Integer.parseInt(startRange.getText().toString()) < 0)
                     || (Integer.parseInt(endRange.getText().toString()) > 10000)
-                    || (Integer.parseInt(startRange.getText().toString()) >= Integer.parseInt(endRange.getText().toString())))  {
-                Toast.makeText(this, "0 이상 10000 이하의 범위 값을 입력하세요", Toast.LENGTH_LONG).show();
+                    || (Integer.parseInt(startRange.getText().toString()) > Integer.parseInt(endRange.getText().toString())))  {
+                Toast.makeText(this, "0 이상 10000 이하의 범위 값을 입력하세요", Toast.LENGTH_SHORT).show();
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.vibrate(200); // 0.2초 진동
                 return;
             }
 
@@ -161,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
                 //이미 모든 수를 뽑은 경우
                 if (accumulatedNum >= endRangeNum - startRangeNum + 1) {
                     Toast.makeText(this, "더 이상 뽑을 수 없습니다", Toast.LENGTH_SHORT).show();
+                    Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(200); // 0.2초 진동
                     return;
                 }
                 int randomNum = RandomNumberList.get(accumulatedNum);
