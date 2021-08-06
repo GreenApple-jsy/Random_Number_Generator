@@ -65,7 +65,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:width="20dp"
+                    android:width="30dp"
                     android:fontFamily="sans-serif-black"
                     android:gravity="center"
                     android:text="~"
@@ -74,30 +74,29 @@
 
                 <EditText
                     android:id="@+id/endRange_editTextNumber"
-                    android:imeOptions="actionDone"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:width="100dp"
+                    android:bufferType="normal"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center"
                     android:hint="10000 이하"
+                    android:imeOptions="actionDone"
                     android:inputType="numberSigned"
                     android:textSize="16sp" />
 
                 <CheckBox
                     android:id="@+id/allowOverlapping_checkBox"
-                    android:layout_width="77dp"
+                    android:layout_width="85dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:width="140dp"
-                    android:checked="true"
-                    android:clickable="false"
                     android:fontFamily="sans-serif-black"
                     android:gravity="start|right|center_vertical"
                     android:text="중복"
                     android:textColor="#535353"
-                    android:textSize="17sp"
+                    android:textSize="15sp"
                     app:buttonTint="#72CEFF" />
             </LinearLayout>
 
@@ -165,15 +164,17 @@
         <Button
             android:id="@+id/pick_button"
             android:layout_width="match_parent"
-            android:layout_height="5dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="sans-serif-black"
             android:insetLeft="10dp"
             android:insetRight="10dp"
+            android:maxHeight="10dip"
+            android:minHeight="10dip"
+            android:onClick="pick"
             android:text="뽑기"
             android:textColor="#5C5C5C"
             android:textSize="30sp"
-            android:onClick="pick"
             app:backgroundTint="#6BC3FF"
             app:iconTint="#FFFFFF" />
 
@@ -188,28 +189,28 @@
 
             <Button
                 android:id="@+id/reset_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
                 android:insetRight="10dp"
+                android:onClick="reset"
                 android:text="초기화"
                 android:textColor="#5C5C5C"
                 android:textSize="25sp"
-                android:onClick="reset"
                 app:backgroundTint="#C5E9FF" />
 
             <Button
                 android:id="@+id/copy_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
                 android:insetLeft="10dp"
+                android:onClick="copy"
                 android:text="결과 복사"
                 android:textColor="#5C5C5C"
                 android:textSize="25sp"
-                android:onClick="copy"
                 app:backgroundTint="#C5E9FF" />
         </LinearLayout>
 
@@ -220,7 +221,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             app:adSize="BANNER"
-            app:adUnitId="애드몹 배너 광고 아이디">
+            app:adUnitId="배너 광고 ID">
         </com.google.android.gms.ads.AdView>
 
     </LinearLayout>
