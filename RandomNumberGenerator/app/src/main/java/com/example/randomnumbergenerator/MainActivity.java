@@ -1,6 +1,7 @@
 package com.example.randomnumbergenerator;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO); //앱 내에서 다크 모드 비활성화
         setContentView(R.layout.activity_main);
 
         //광고 SDK 초기화
@@ -194,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         else if (Num <= 9999)
             result.setTextSize(125);
         else if (Num == 10000)
-            result.setTextSize(110);
+            result.setTextSize(100);
     }
 
     public void reset(View v) {
