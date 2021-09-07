@@ -1,5 +1,6 @@
 package com.example.randomnumbergenerator;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -11,6 +12,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -22,11 +24,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean hasStarted; //현재 뽑기 진행중인 경우 true
     public List<Integer> RandomNumberList;
 
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +76,12 @@ public class MainActivity extends AppCompatActivity {
 
         adView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
+
+        //하단 배너 광고 로드
         adView.loadAd(adRequest);
+
+        //전면 배너 광고 로드
+        loadAd();
 
         startRange = findViewById(R.id.startRange_editTextNumber);
         endRange = findViewById(R.id.endRange_editTextNumber);
@@ -86,6 +99,44 @@ public class MainActivity extends AppCompatActivity {
 
         accumulatedNum = 0;
         hasStarted = false;
+    }
+
+    public void loadAd() {
+
+        //광고 SDK 초기화
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        //전면 광고 로드
+        InterstitialAd.load(this,"광고 ID", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        mInterstitialAd = interstitialAd;
+                        interstitialAd.setFullScreenContentCallback(
+                                new FullScreenContentCallback() {
+                                    @Override
+                                    public void onAdDismissedFullScreenContent() {
+                                        mInterstitialAd = null;
+                                    }
+
+                                    @Override
+                                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                        mInterstitialAd = null;
+                                    }
+
+                                    @Override
+                                    public void onAdShowedFullScreenContent() {
+                                        mInterstitialAd = null;
+                                    }
+                                }
+                        );
+                    }
+                });
     }
 
     //EditText가 아닌 영역을 터치 시 키보드 숨기기
@@ -148,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Collections.shuffle(RandomNumberList);
             }
-
         }
 
         if (hasStarted = true) { //이미 뽑기 진행 중인 경우
@@ -211,6 +261,13 @@ public class MainActivity extends AppCompatActivity {
         hasStarted = false;
 
         ActivateEditField();
+
+        loadAd();
+
+        //전면 광고 팝업
+        if (mInterstitialAd != null) {
+            mInterstitialAd.show(MainActivity.this);
+        }
     }
 
     public void copy(View v) {
@@ -218,6 +275,13 @@ public class MainActivity extends AppCompatActivity {
         ClipData clipData = ClipData.newPlainText("결과", resultView.getText().toString());
         clipboardManager.setPrimaryClip(clipData);
         Toast.makeText(this, "결과가 복사되었습니다.",Toast.LENGTH_SHORT).show();
+
+        loadAd();
+
+        //전면 광고 팝업
+        if (mInterstitialAd != null) {
+            mInterstitialAd.show(MainActivity.this);
+        }
     }
 
     private void ActivateEditField() {
